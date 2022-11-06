@@ -103,6 +103,7 @@ func TestFindEmojiSubmatchIndex(t *testing.T) {
 func TestFromAlias_Idweb_1(t *testing.T) {
     assert.Equal(t, FromAlias("astonished"), FromCode("\U0001f632"))
 }
+
 func TestFromAlias_Idweb_2(t *testing.T) {
     assert.Equal(t, FromAlias("atm"), FromCode("\U0001f3e7"))
 }
