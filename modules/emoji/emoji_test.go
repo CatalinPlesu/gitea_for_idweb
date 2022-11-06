@@ -98,3 +98,15 @@ func TestFindEmojiSubmatchIndex(t *testing.T) {
 		assert.Equal(t, kase.expected, actual)
 	}
 }
+
+// teste pentru idweb
+func TestFromAlias_Idweb_1(t *testing.T) {
+    assert.Equal(t, FromAlias("astonished"), FromCode("\U0001f632"))
+}
+func TestFromAlias_Idweb_2(t *testing.T) {
+    assert.Equal(t, FromAlias("atm"), FromCode("\U0001f3e7"))
+}
+
+func TestFromAlias_Idweb_3(t *testing.T) {
+    assert.Equal(t, FromAlias("clown_face"), FromCode("\U0001f921"))
+}
