@@ -7,6 +7,9 @@ pipeline{
     
     environment{
         CLEAN_WORKSPACE = 'false'
+        ON_SUCCESS_SEND_EMAIL = 'true'
+        ON_FAILURE_SEND_EMAIL = 'true'
+        TESTING_FRONTEND = 'false'
     }
     
     
@@ -30,7 +33,7 @@ pipeline{
         }
         
         stage('dependencies'){
-            speps{
+            steps{
                 echo '2. Getting all dependencies'
                 sh 'go get -u ./..'
             }
@@ -49,6 +52,9 @@ pipeline{
         }
         
         stage('test frontend'){
+             when {
+                 environment name: 'TESTING_FRONTEND', value: 'true' 
+             }
             steps{
                 sh 'make test-frontend'
             }
