@@ -63,10 +63,10 @@ pipeline{
 
     post {
         success {
-            emailext subject: 'Gitea - Success'
+            emailext body: 'A Test EMail', subject: 'Success', to 'catalinsfake@gmail.com'
         }
         failure {
-            emailext subject: 'Gitea - Failure'
+            emailext body: 'A Test EMail', subject: 'Failure', to 'catalinsfake@gmail.com'
         }
     }
 
