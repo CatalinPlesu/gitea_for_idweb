@@ -119,7 +119,7 @@ TAGS ?=
 TAGS_SPLIT := $(subst $(COMMA), ,$(TAGS))
 TAGS_EVIDENCE := $(MAKE_EVIDENCE_DIR)/tags
 
-TEST_TAGS ?= sqlite sqlite_unlock_notify
+TEST_TAGS ?= 
 
 TAR_EXCLUDES := .git data indexers queues log node_modules $(EXECUTABLE) $(FOMANTIC_WORK_DIR)/node_modules $(DIST) $(MAKE_EVIDENCE_DIR) $(AIR_TMP_DIR)
 
@@ -335,8 +335,8 @@ test: test-frontend test-backend
 
 .PHONY: test-backend
 test-backend:
-	@echo "Running go test with $(GOTESTFLAGS) -tags '$(TEST_TAGS)'..."
-	@$(GO) test $(GOTESTFLAGS) -tags='$(TEST_TAGS)' $(GO_PACKAGES)
+	@echo "Running go test with $(GOTESTFLAGS)"
+	@$(GO) test $(GOTESTFLAGS) $(GO_PACKAGES)
 
 .PHONY: test-frontend
 test-frontend: node_modules
