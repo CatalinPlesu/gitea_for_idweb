@@ -42,8 +42,8 @@ pipeline{
         
          stage('test backend'){
             steps{
-                // sh 'go test $PWD/modules/emoji -v 2>&1 ./... | ../../go/bin/go-junit-report -set-exit-code > report.xml'
-                sh 'go test -v 2>&1 ./... | ../../go/bin/go-junit-report -set-exit-code > report.xml || echo "i dont like errors"'
+                sh 'go test $PWD/modules/emoji -v 2>&1 ./... | ../../go/bin/go-junit-report -set-exit-code > report.xml'
+                // sh 'go test -v 2>&1 ./... | ../../go/bin/go-junit-report -set-exit-code > report.xml || echo "0"'
             }
             post {
                 always{
@@ -94,5 +94,4 @@ pipeline{
         }
     }
 }
-
 
