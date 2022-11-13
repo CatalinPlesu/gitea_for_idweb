@@ -10,6 +10,7 @@ pipeline{
         ON_SUCCESS_SEND_EMAIL = 'true'
         ON_FAILURE_SEND_EMAIL = 'true'
         TESTING_FRONTEND = 'false'
+        EMAIL_TO = 'catalinsfake@gmail.com'
     }
     
     
@@ -25,51 +26,73 @@ pipeline{
              }
         }
         
-        // stage("git"){
-        //     steps{
-        //         echo '1. Cloning github repo, master branch'
-        //         git 'https://github.com/CatalinPlesu/gitea_for_idweb'
-        //     }    
-        // }
+        stage("git"){
+            steps{
+                echo '1. Cloning github repo, master branch'
+                git 'https://github.com/CatalinPlesu/gitea_for_idweb'
+            }    
+        }
 
-        // stage('dependencies'){
-        //     steps{
-        //         echo '2. Getting all dependencies'
-        //         sh 'go get -u ./..'
-        //     }
-        // }
+        stage('dependencies'){
+            steps{
+                echo '2. Getting all dependencies'
+                sh 'make deps'
+            }
+        }
         
-        // stage("build"){
-        //     steps{
-        //         sh 'TAGS="bindata" make build'
-        //     }
-        // }
+         stage('test backend'){
+            steps{
+                // sh 'go test $PWD/modules/emoji -v 2>&1 ./... | ../../go/bin/go-junit-report -set-exit-code > report.xml'
+                sh 'go test -v 2>&1 ./... | ../../go/bin/go-junit-report -set-exit-code > report.xml || echo "i dont like errors"'
+            }
+            post {
+                always{
+                    junit 'report.xml'
+                }
+            }
+        }
         
-        // stage('test backend'){
-        //     steps{
-        //         sh 'go test $PWD/modules/emoji'
-        //     }
-        // }
+        stage('test frontend'){
+            steps{
+                echo "TESTING_FRONTEND: $TESTING_FRONTEND"
+                script{
+                    if (TESTING_FRONTEND == true){
+                        sh 'make test-frontend'
+                    }
+                }
+            }
+        }
         
-        // stage('test frontend'){
-        //      when {
-        //          environment name: 'TESTING_FRONTEND', value: 'true' 
-        //      }
-        //     steps{
-        //         sh 'make test-frontend'
-        //     }
-        // }
+        stage("build"){
+            steps{
+                sh 'TAGS="bindata" make build'
+            }
+        }
+        
     }
 
     post {
-        success {
-            emailext body: 'A Test EMail', subject: 'Success', to 'catalinsfake@gmail.com'
-            echo 'success'
+        success { 
+            script{
+                if (ON_SUCCESS_SEND_EMAIL == 'true'){
+                      emailext body: 'JOB_NAME: ${JOB_NAME},\n BUILD_NUMBER: ${BUILD_NUMBER},\n BUILD_URL: ${BUILD_URL}', 
+                        to: "${EMAIL_TO}", 
+                       subject: 'Build succeeded in Jenkins: $PROJECT_NAME - #$BUILD_NUMBER'
+                        echo 'success'
+                 }
+            }
         }
         failure {
-            emailext body: 'A Test EMail', subject: 'Failure', to 'catalinsfake@gmail.com'
-            echo 'failure'
+            script{
+                if (ON_SUCCESS_SEND_EMAIL == 'true'){
+                    emailext body: 'JOB_NAME: ${JOB_NAME},\n BUILD_NUMBER: ${BUILD_NUMBER},\n BUILD_URL: ${BUILD_URL}', 
+                    to: "${EMAIL_TO}", 
+                    subject: 'Build failed in Jenkins: $PROJECT_NAME - #$BUILD_NUMBER'
+                    echo 'failure'
+                }
+            }
         }
     }
-
 }
+
+
