@@ -37,6 +37,7 @@ pipeline{
             steps{
                 echo '2. Getting all dependencies'
                 sh 'make deps'
+                sh 'TAGS="bindata" make build'
             }
         }
         
@@ -60,12 +61,6 @@ pipeline{
                         sh 'make test-frontend'
                     }
                 }
-            }
-        }
-        
-        stage("build"){
-            steps{
-                sh 'TAGS="bindata" make build'
             }
         }
         
@@ -94,4 +89,5 @@ pipeline{
         }
     }
 }
+
 
